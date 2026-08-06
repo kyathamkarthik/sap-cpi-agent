@@ -18,8 +18,8 @@ In enterprise SAP environments, message failures in Integration Flows (iFlows) d
 * **Impact:** Reduced simulated MTTR for integration payload failures by **~80%** (from ~42 minutes down to ~5 seconds).
 
 ---
-
-## 🏗️ Architecture Flow
+```mermaid
+Architecture Flow
 graph TD
     %% Define Styles
     classDef sap fill:#074d92,stroke:#fff,stroke-width:2px,color:#fff;
