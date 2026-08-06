@@ -21,7 +21,7 @@ In enterprise SAP environments, message failures in Integration Flows (iFlows) d
 
 ## 🏗️ Architecture Flow
 
-![System Architecture](images/architecture.png)
+![System Architecture](c:\Users\kyath\cpi-recovery-agent\images\architecture.png)
 
 1. **Log Monitoring:** The backend queries SAP CPI OData endpoints (`/api/v1/MessageProcessingLogs`) for `FAILED` status logs.
 2. **AI Diagnostics:** Failed traces and raw payloads are passed to a structured LangChain pipeline that identifies schema violations (e.g., missing closing tags, incorrect date formats, missing fields).
