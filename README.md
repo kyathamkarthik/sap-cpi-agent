@@ -20,7 +20,6 @@ In enterprise SAP environments, message failures in Integration Flows (iFlows) d
 ---
 ## Architecture Flow
 ```mermaid
-Architecture Flow
 graph TD
     %% Define Styles
     classDef sap fill:#074d92,stroke:#fff,stroke-width:2px,color:#fff;
