@@ -20,16 +20,38 @@ In enterprise SAP environments, message failures in Integration Flows (iFlows) d
 ---
 
 ## 🏗️ Architecture Flow
-+---------------------------+        +--------------------------+
-|  SAP BTP Integration Suite|        |    FastAPI Microservice  |
-|  (OData Message Processing| ------ |    (/api/fetch-logs)      |
-|           Logs)           |        +--------------------------+
-+---------------------------+                     |
-v
-+---------------------------+        +--------------------------+
-|    Streamlit Dashboard    | <----- |     LangChain Engine     |
-|   (Payload Diff Viewer)   |        |  (OpenAI Schema Fixer)   |
-+---------------------------+        +--------------------------+
+graph TD
+    %% Define Styles
+    classDef sap fill:#074d92,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef backend fill:#009688,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef ai fill:#1C3C3C,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef frontend fill:#FF4B4B,stroke:#fff,stroke-width:2px,color:#fff;
+
+    subgraph SAP Enterprise Environment
+        SAP[SAP Integration Suite]:::sap --> OData[OData API: Message Processing Logs]:::sap
+    end
+
+    subgraph Autonomous AI Agent Microservice
+        FastAPI[FastAPI Router Engine]:::backend
+        Connector[SAP OData Connector]:::backend
+        LangChain[LangChain Orchestration]:::ai
+        
+        OData -.->|HTTP GET: $filter=Status eq 'FAILED'| Connector
+        Connector -->|Parsed Logs| FastAPI
+        FastAPI -->|Broken XML/JSON & Trace| LangChain
+    end
+
+    subgraph External AI Provider
+        OpenAI((OpenAI GPT-3.5/4)):::ai
+    end
+
+    subgraph User Interface
+        Streamlit[Streamlit Diff Viewer Dashboard]:::frontend
+    end
+
+    LangChain <-->|Prompt + Broken Payload| OpenAI
+    LangChain -->|Corrected Payload + Root Cause| FastAPI
+    FastAPI <-->|REST API /api/fetch-logs| Streamlit
 
 1. **Log Monitoring:** The backend queries SAP CPI OData endpoints (`/api/v1/MessageProcessingLogs`) for `FAILED` status logs.
 2. **AI Diagnostics:** Failed traces and raw payloads are passed to a structured LangChain pipeline that identifies schema violations (e.g., missing closing tags, incorrect date formats, missing fields).
